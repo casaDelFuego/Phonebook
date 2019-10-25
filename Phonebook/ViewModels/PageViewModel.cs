@@ -1,4 +1,7 @@
-$HEADER$namespace $NAMESPACE$
+namespace Phonebook.ViewModels
 {
-  public class $CLASS$ {$END$}
+    public class PageViewModel
+    {
+        public string Title { get; set; }
+    }
 }

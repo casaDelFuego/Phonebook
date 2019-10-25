@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
+using Phonebook.ViewModels;
 
 namespace Phonebook.Controllers.Pages
 {
-    public class ListAllController : Controller
+    public class HomeController : Controller
     {
         [HttpGet]
         [Route("")]
         public IActionResult Index()
         {
-            return View();
+            return View(new PageViewModel()
+            {
+                Title = "Phonebook"
+            });
         }
                 
     }

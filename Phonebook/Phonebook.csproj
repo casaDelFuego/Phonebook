@@ -6,8 +6,39 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.App"/>
-        <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All"/>
+        <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="wwwroot\**" />
+      <Compile Remove="Views\Phonebook\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="wwwroot\**" />
+      <EmbeddedResource Remove="Views\Phonebook\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="wwwroot\**" />
+      <None Remove="Views\Phonebook\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="wwwroot\**" />
+      <Content Remove="Views\Phonebook\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\build\default.bundle.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\build\default.bundle.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\build\default.bundle.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\build\default.bundle.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\javascripts\app.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\javascripts\index.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\stylesheets\app.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\stylesheets\index.scss" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,18 @@
-$HEADER$namespace $NAMESPACE$
+using Microsoft.AspNetCore.Mvc;
+using Phonebook.ViewModels;
+
+namespace Phonebook.Controllers.Pages
 {
-  public class $CLASS$ {$END$}
+    public class AddPersonController : Controller
+    {
+        [HttpGet]
+        [Route("/add-person")]
+        public IActionResult Index()
+        {
+            return View(new PageViewModel()
+            {
+                Title = "Add person"
+            });
+        }
+    }
 }

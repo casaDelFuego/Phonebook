@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2019.2/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.2/system/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_Phonebook.595349991.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="Phonebook" t="IncludeRecursive">
+        <e p="Controllers" t="Include">
+          <e p="API" t="Include">
+            <e p="PersonController.cs" t="Include" />
+          </e>
+          <e p="Pages" t="Include">
+            <e p="AddPersonController.cs" t="Include" />
+            <e p="EditPersonController.cs" t="Include" />
+            <e p="HomeController.cs" t="Include" />
+            <e p="SinglePersonController.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Models" t="Include">
+          <e p="PersonModel.cs" t="Include" />
+        </e>
+        <e p="Phonebook.csproj" t="IncludeRecursive" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Services" t="Include">
+          <e p="IPersonService.cs" t="Include" />
+          <e p="PersonService.cs" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
+        <e p="ViewModels" t="Include">
+          <e p="PageViewModel.cs" t="Include" />
+        </e>
+        <e p="Views" t="Include">
+          <e p="AddPerson" t="Include">
+            <e p="Index.cshtml" t="Include" />
+          </e>
+          <e p="EditPerson" t="Include">
+            <e p="Index.cshtml" t="Include" />
+          </e>
+          <e p="Home" t="Include">
+            <e p="Index.cshtml" t="Include" />
+          </e>
+          <e p="Shared" t="Include">
+            <e p="Layout.cshtml" t="Include" />
+          </e>
+          <e p="SinglePerson" t="Include">
+            <e p="Index.cshtml" t="Include" />
+          </e>
+        </e>
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="Phonebook.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Phonebook.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

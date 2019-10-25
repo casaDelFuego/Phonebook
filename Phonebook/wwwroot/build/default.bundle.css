@@ -1,0 +1,25 @@
+input, button {
+  margin: 2px; }
+
+table, th, tr, td {
+  border: 1px solid grey;
+  border-collapse: collapse; }
+
+tr:hover {
+  background-color: #E0E0E0;
+  cursor: pointer; }
+
+th {
+  background-color: #bebebe; }
+
+input {
+  width: 50%; }
+
+input:invalid {
+  border: 1px solid red; }
+
+input:valid {
+  border: 1px solid black; }
+
+
+/*# sourceMappingURL=default.bundle.css.map*/

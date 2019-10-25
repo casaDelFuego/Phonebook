@@ -1,18 +1,21 @@
-@model TModel
-
-@{
-    Layout = null;
-}
+@model Phonebook.ViewModels.PageViewModel
 
 <!DOCTYPE html>
-
-<html>
-<head>
-    <title>title</title>
-</head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="/build/default.bundle.css">
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+   
+    
+    <title>@Model.Title</title> <!-- it takes the title that comes with the page-->
+  </head>
 <body>
-<div>
-      
-</div>
+
+@RenderBody()  <!--that renders the body from some page view-->
+<script src="/build/default.bundle.js"></script>
+
 </body>
 </html>
