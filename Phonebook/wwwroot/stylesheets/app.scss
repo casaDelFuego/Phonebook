@@ -21,10 +21,18 @@ input {
     width: 50%;
 }
 
-input:invalid {
+/*input:invalid {
     border: 1px solid red;
 }
   
 input:valid {
     border: 1px solid black;
+}*/
+
+span {
+    margin: 2px;
+}
+
+#error-firstName, #error-lastName, #error-address, #error-form, #error-phone, #error-email {
+    color: red;
 }

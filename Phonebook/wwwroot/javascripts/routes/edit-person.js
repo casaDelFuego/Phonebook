@@ -6,16 +6,19 @@ class EditPersonPage extends Component{
     constructor(props) {
       super(props);
       this.saveChanges = this.saveChanges.bind(this);
-      //this.deletePerson = this.deletePerson.bind(this);
       this.validate = this.validate.bind(this);
       this.formValid = this.formValid.bind(this);   
+      this.compareValues = this.compareValues.bind(this);
+      this.backToList = this.backToList.bind(this);
   
       this.state = {
+        id: this.props.match.params.id,
         firstName: '',
         lastName: '',
         phoneNumber: '',
         address: '',
-        email: ''
+        email: '',
+        originalState:{}
       };
     }
 
@@ -24,8 +27,9 @@ class EditPersonPage extends Component{
     .then(res => {
       return res.json();      
     }).then(result => {
-        this.setState({ ...result });
-        console.log(this.state);
+        this.setState({ ...result, originalState: result });
+        // save original state as an object in your state and just don't update it
+        console.log('state after component did mount', this.state);
       },
       error => {
         console.log(error);
@@ -45,7 +49,31 @@ class EditPersonPage extends Component{
     this.setState({ email: event.target.value });
 
     backToList(){
-      window.location.href = "/"
+      console.log(this.compareValues())
+      if(this.compareValues()==true){
+        window.location.href = "/"
+      } else {
+        let result = confirm("Do you want to ignore these changes?");
+        if(result){      
+          window.location.href = '/'
+        }
+      }      
+    };
+
+    compareValues(oldValue, newValue) {
+      oldValue = this.state.originalState;
+      newValue = this.state;
+      console.log('old and new values respectively', oldValue, newValue)
+      if(oldValue.id === newValue.id
+        && oldValue.firstName === newValue.firstName
+        && oldValue.lastName === newValue.lastName
+        && oldValue.phoneNumber === newValue.phoneNumber
+        && oldValue.address === newValue.address
+        && oldValue.email === newValue.email){
+        return true;
+      } else {
+        return false;
+      }
     };
 
     validate() {
@@ -55,17 +83,17 @@ class EditPersonPage extends Component{
       } else {
           this.saveChanges()
       }
-    }
+    };
 
     checkPhoneNumber(number){
         console.log(number);
-        if(!number.match(/^\d{10}$/)){
+        if(!String(number).match(/^\d{10}$/)){
             console.log("Please put in a proper phone number, 10 digits");
             return false;
         } else {
             return true;
         }
-    }
+    };
 
     checkEmail(email){
         console.log(email);
@@ -75,7 +103,7 @@ class EditPersonPage extends Component{
         } else {
             return true;
         }
-    }
+    };
 
     checkFields(fields){
         if(fields===''){
@@ -84,7 +112,7 @@ class EditPersonPage extends Component{
         } else {
             return true;
         }
-    }
+    };
 
     formValid() {
         let validField = this.state.firstName && this.state.lastName && this.state.address;
@@ -93,10 +121,10 @@ class EditPersonPage extends Component{
         if(this.checkEmail(validEmail)==true && this.checkPhoneNumber(validPhoneNumber)==true && this.checkFields(validField)){
             return true;
         } else {
-            alert("form isn't valid")
+            console.log("form isn't valid")
             return false;
         }
-    }
+    };
 
     saveChanges(){
       fetch(`http://localhost:5000/api/edit-person/${this.props.match.params.id}`, {
@@ -116,21 +144,11 @@ class EditPersonPage extends Component{
       .then(response => console.log("Success:", response)); 
       window.location.href = `http://localhost:5000/single-person/${this.props.match.params.id}`
       
-    }
-   
+    }   
+ 
     
-    /*deletePerson(){
-      fetch(`http://localhost:5000/api/delete-person/${this.props.match.params.id}`, {
-        method: 'DELETE'})
-        .then(res => {
-        return res
-    })
-    .catch(err => console.error(err))
-    }*/
-    
-    render(){
-     
-      console.log(this.props);
+    render(){     
+      console.log('props are:', this.props);
       console.log("State in render: ", this.state); 
         return(
           <div>
@@ -152,3 +170,15 @@ class EditPersonPage extends Component{
 export default withRouter(EditPersonPage);
 
 //<button onClick={this.deletePerson}>Delete</button>
+
+      //this.deletePerson = this.deletePerson.bind(this);
+
+
+   /*deletePerson(){
+      fetch(`http://localhost:5000/api/delete-person/${this.props.match.params.id}`, {
+        method: 'DELETE'})
+        .then(res => {
+        return res
+    })
+    .catch(err => console.error(err))
+    }*/

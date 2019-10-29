@@ -47113,44 +47113,27 @@ function (_Component) {
       });
     });
 
-    _defineProperty(_assertThisInitialized(_this), "handleChangeFisrtName", function (event) {
-      return _this.setState({
-        firstName: event.target.value
-      });
-    });
+    _this.validate = _this.validate.bind(_assertThisInitialized(_this)); //this.formValid = this.formValid.bind(this);
 
-    _defineProperty(_assertThisInitialized(_this), "handleChangeLastName", function (event) {
-      return _this.setState({
-        lastName: event.target.value
-      });
-    });
+    /*this.checkAddress = this.checkAddress.bind(this);
+    this.checkEmail = this.checkEmail.bind(this);
+    this.checkFirstName = this.checkFirstName.bind(this);
+    this.checkLastName = this. checkLastName.bind(this);
+    this.checkPhoneNumber = this.checkPhoneNumber.bind(this);*/
 
-    _defineProperty(_assertThisInitialized(_this), "handleChangePhoneNumber", function (event) {
-      return _this.setState({
-        phoneNumber: event.target.value
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "handleChangeAddress", function (event) {
-      return _this.setState({
-        address: event.target.value
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "handleChangeEmail", function (event) {
-      return _this.setState({
-        email: event.target.value
-      });
-    });
-
-    _this.validate = _this.validate.bind(_assertThisInitialized(_this));
-    _this.formValid = _this.formValid.bind(_assertThisInitialized(_this));
+    _this.handleChangeFisrtName = _this.handleChangeFisrtName.bind(_assertThisInitialized(_this));
+    _this.FirstNameValid = _this.FirstNameValid.bind(_assertThisInitialized(_this));
     _this.state = {
       firstName: '',
       lastName: '',
       phoneNumber: '',
       address: '',
-      email: ''
+      email: '',
+      isFirstNameValid: true,
+      isLastNameValid: true,
+      isPhoneNumberValid: true,
+      isAddressValid: true,
+      isEmailValid: true
     };
     return _this;
   }
@@ -47164,61 +47147,131 @@ function (_Component) {
         document.getElementById('error-form').innerHTML = "Form isn't filled correctly";
       } else {
         this.addPerson();
-        window.location.href = '/'; //alert('person has been added')
+        window.location.href = '/';
       }
     }
-  }, {
-    key: "checkPhoneNumber",
-    value: function checkPhoneNumber(number) {
-      console.log(number);
+    /*checkPhoneNumber(number){
+        console.log(number);
+        if(!number.match(/^\d{10}$/)){
+            document.getElementById('error-phone').innerHTML = "Please put in a proper phone number, 10 digits";
+            this.setState({isPhoneNumberValid: false});
+            return false;
+        } else {
+            document.getElementById('error-phone').innerHTML = "";
+            this.setState({isPhoneNumberValid: true});
+            return true;
+        }
+    }
+     checkEmail(email){
+        console.log(email);
+        if(!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)){
+            document.getElementById('error-email').innerHTML = "Please put in a proper email";
+            this.setState({isEmailValid: false});
+            return false;
+        } else {
+            document.getElementById('error-email').innerHTML = "";
+            this.setState({isEmailValid: true});
+            return true;
+        }
+    }*/
 
-      if (!number.match(/^\d{10}$/)) {
-        document.getElementById('error-phone').innerHTML = "Please put in a proper phone number, 10 digits";
+  }, {
+    key: "checkFirstName",
+    value: function checkFirstName(firstName) {
+      if (firstName === '') {
+        document.getElementById('error-firstName').innerHTML = "This field can't be empty";
+        this.setState({
+          isFirstNameValid: false
+        });
         return false;
       } else {
+        document.getElementById('error-firstName').innerHTML = "";
+        this.setState({
+          isFirstNameValid: true
+        });
         return true;
       }
     }
-  }, {
-    key: "checkEmail",
-    value: function checkEmail(email) {
-      console.log(email);
+    /*
+    checkLastName(lastName){
+        if(lastName===''){
+            document.getElementById('error-lastName').innerHTML = "This field can't be empty";
+            LastNameValid();
+            return false;
+        } else {
+            document.getElementById('error-lastName').innerHTML = "";
+            this.setState({isLastNameValid: true});
+            return true;
+        }
+    }
+     checkAddress(address){
+        if(address===''){
+            document.getElementById('error-address').innerHTML = "This field can't be empty";
+            this.setState({isAddressValid: false});
+            return false;
+        } else {
+            document.getElementById('error-address').innerHTML = "";
+            this.setState({isAddressValid: true});
+            return true;
+        }
+    }
+     formValid() {
+        let validFirstName = this.state.firstName;
+        let validLastName = this.state.lastName;
+        let validAddress = this.state.address;
+        let validEmail = this.state.email;
+        let validPhoneNumber = this.state.phoneNumber;
+        if(this.checkEmail(validEmail)==true 
+        && this.checkPhoneNumber(validPhoneNumber)==true 
+        && this.checkFirstName(validFirstName)==true
+        && this.checkLastName(validLastName)==true
+        && this.checkAddress(validAddress)==true) { 
+            this.setState({
+            isFirstNameValid: true,
+            isLastNameValid: true,
+            isPhoneNumberValid: true,
+            isAddressValid: true,
+            isEmailValid: true
+            })
+            return true;
+        } else {
+            return false;
+        }
+    }*/
 
-      if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-        document.getElementById('error-email').innerHTML = "Please put in a proper email";
-        return false;
-      } else {
-        return true;
-      }
-    }
   }, {
-    key: "checkFields",
-    value: function checkFields(fields) {
-      if (fields === '') {
-        document.getElementsByClassName('error-field').innerHTML = "These fields can't be empty";
-        return false;
-      } else {
-        return true;
-      }
+    key: "handleChangeFisrtName",
+    value: function handleChangeFisrtName(event) {
+      this.setState({
+        firstName: event.target.value
+      });
+      this.checkFirstName();
     }
-  }, {
-    key: "formValid",
-    value: function formValid() {
-      var validField = this.state.firstName && this.state.lastName && this.state.address;
-      var validEmail = this.state.email;
-      var validPhoneNumber = this.state.phoneNumber;
+    /*this.setState({ firstName: event.target.value });
+    handleChangeLastName = event =>
+    this.setState({ lastName: event.target.value });
+    handleChangePhoneNumber = event =>
+    this.setState({ phoneNumber: event.target.value });
+    handleChangeAddress = event =>
+    this.setState({ address: event.target.value });
+    handleChangeEmail = event =>
+    this.setState({ email: event.target.value });*/
 
-      if (this.checkEmail(validEmail) == true && this.checkPhoneNumber(validPhoneNumber) == true && this.checkFields(validField)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
   }, {
     key: "backToList",
     value: function backToList() {
       window.location.href = "/";
     }
+  }, {
+    key: "FirstNameValid",
+    value: function FirstNameValid() {
+      this.checkFirstName();
+    }
+    /*LastNameValid = () => this.setState({isLastNameValid: false});  
+    PhoneNumberValid = () => this.setState({isPhoneNumberValid: false});
+    AddressValid = () => this.setState({isAddressValid: false});
+    EmailValid = () => this.setState({isEmailValid: false});*/
+
   }, {
     key: "render",
     value: function render() {
@@ -47226,46 +47279,17 @@ function (_Component) {
         className: "wrapper"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Add a person"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "all fields are required"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         id: "error-form"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "First name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "First name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "firstName",
         value: this.state.firstName,
         onChange: this.handleChangeFisrtName,
-        required: true
+        onBlur: this.FirstNameValid,
+        style: {
+          border: this.state.isFirstNameValid ? '1px solid black' : '1px solid red'
+        }
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-        className: "error-field"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Last name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        name: "lastName",
-        value: this.state.lastName,
-        onChange: this.handleChangeLastName,
-        required: true
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-        className: "error-field"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Phone number"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        name: "phoneNumber",
-        value: this.state.phoneNumber,
-        onChange: this.handleChangePhoneNumber,
-        required: true
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-        id: "error-phone"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Address"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        name: "address",
-        value: this.state.address,
-        onChange: this.handleChangeAddress,
-        required: true
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-        className: "error-field"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "E-mail"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        name: "email",
-        value: this.state.email,
-        onChange: this.handleChangeEmail,
-        required: true
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-        id: "error-email"
+        id: "error-firstName"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "btn",
         onClick: this.validate
@@ -47279,6 +47303,18 @@ function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 /* harmony default export */ __webpack_exports__["default"] = (AddPersonPage);
+/*<label>Last name</label><br/>
+<input type="text" name="lastName" value={this.state.lastName} onChange={this.handleChangeLastName} onBlur={this.LastNameValid} style={{border: this.state.isLastNameValid ? '1px solid black' : '1px solid red'}}/><br/>
+<span id="error-lastName"></span><br/>
+<label>Phone number</label><br/>
+<input type="text" name="phoneNumber" value={this.state.phoneNumber} onChange={this.handleChangePhoneNumber} onBlur={this.PhoneNumberValid} style={{border: this.state.isPhoneNumberValid ? '1px solid black' : '1px solid red'}}/><br/>
+<span id="error-phone"></span><br/>
+<label>Address</label><br/>
+<input type="text" name="address" value={this.state.address} onChange={this.handleChangeAddress} onBlur={this.AddressValid} style={{border: this.state.isAddressValid ? '1px solid black' : '1px solid red'}}/><br/>
+<span id="error-address"></span><br/>
+<label>E-mail</label><br/>
+<input type="text" name="email" value={this.state.email} onChange={this.handleChangeEmail} onBlur={this.EmailValid} style={{border: this.state.isEmailValid ? '1px solid black' : '1px solid red'}}/><br/>
+<span id="error-email"></span><br/>*/
 
 /***/ }),
 
@@ -47363,16 +47399,19 @@ function (_Component) {
       });
     });
 
-    _this.saveChanges = _this.saveChanges.bind(_assertThisInitialized(_this)); //this.deletePerson = this.deletePerson.bind(this);
-
+    _this.saveChanges = _this.saveChanges.bind(_assertThisInitialized(_this));
     _this.validate = _this.validate.bind(_assertThisInitialized(_this));
     _this.formValid = _this.formValid.bind(_assertThisInitialized(_this));
+    _this.compareValues = _this.compareValues.bind(_assertThisInitialized(_this));
+    _this.backToList = _this.backToList.bind(_assertThisInitialized(_this));
     _this.state = {
+      id: _this.props.match.params.id,
       firstName: '',
       lastName: '',
       phoneNumber: '',
       address: '',
-      email: ''
+      email: '',
+      originalState: {}
     };
     return _this;
   }
@@ -47385,9 +47424,12 @@ function (_Component) {
       fetch("http://localhost:5000/api/single-person/".concat(this.props.match.params.id)).then(function (res) {
         return res.json();
       }).then(function (result) {
-        _this2.setState(_objectSpread({}, result));
+        _this2.setState(_objectSpread({}, result, {
+          originalState: result
+        })); // save original state as an object in your state and just don't update it
 
-        console.log(_this2.state);
+
+        console.log('state after component did mount', _this2.state);
       }, function (error) {
         console.log(error);
       });
@@ -47395,7 +47437,30 @@ function (_Component) {
   }, {
     key: "backToList",
     value: function backToList() {
-      window.location.href = "/";
+      console.log(this.compareValues());
+
+      if (this.compareValues() == true) {
+        window.location.href = "/";
+      } else {
+        var result = confirm("Do you want to ignore these changes?");
+
+        if (result) {
+          window.location.href = '/';
+        }
+      }
+    }
+  }, {
+    key: "compareValues",
+    value: function compareValues(oldValue, newValue) {
+      oldValue = this.state.originalState;
+      newValue = this.state;
+      console.log('old and new values respectively', oldValue, newValue);
+
+      if (oldValue.id === newValue.id && oldValue.firstName === newValue.firstName && oldValue.lastName === newValue.lastName && oldValue.phoneNumber === newValue.phoneNumber && oldValue.address === newValue.address && oldValue.email === newValue.email) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }, {
     key: "validate",
@@ -47413,7 +47478,7 @@ function (_Component) {
     value: function checkPhoneNumber(number) {
       console.log(number);
 
-      if (!number.match(/^\d{10}$/)) {
+      if (!String(number).match(/^\d{10}$/)) {
         console.log("Please put in a proper phone number, 10 digits");
         return false;
       } else {
@@ -47452,7 +47517,7 @@ function (_Component) {
       if (this.checkEmail(validEmail) == true && this.checkPhoneNumber(validPhoneNumber) == true && this.checkFields(validField)) {
         return true;
       } else {
-        alert("form isn't valid");
+        console.log("form isn't valid");
         return false;
       }
     }
@@ -47480,19 +47545,10 @@ function (_Component) {
       });
       window.location.href = "http://localhost:5000/single-person/".concat(this.props.match.params.id);
     }
-    /*deletePerson(){
-      fetch(`http://localhost:5000/api/delete-person/${this.props.match.params.id}`, {
-        method: 'DELETE'})
-        .then(res => {
-        return res
-    })
-    .catch(err => console.error(err))
-    }*/
-
   }, {
     key: "render",
     value: function render() {
-      console.log(this.props);
+      console.log('props are:', this.props);
       console.log("State in render: ", this.state);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Edit a person"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
@@ -47526,6 +47582,16 @@ function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_router__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(EditPersonPage)); //<button onClick={this.deletePerson}>Delete</button>
+//this.deletePerson = this.deletePerson.bind(this);
+
+/*deletePerson(){
+   fetch(`http://localhost:5000/api/delete-person/${this.props.match.params.id}`, {
+     method: 'DELETE'})
+     .then(res => {
+     return res
+ })
+ .catch(err => console.error(err))
+ }*/
 
 /***/ }),
 

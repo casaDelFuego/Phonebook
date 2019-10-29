@@ -47,8 +47,7 @@ class StartPage extends Component{
 
   toDelete(id){
     let result = confirm("Are you sure to delete?");
-    if(result){
-      
+    if(result){      
       this.deletePerson(id)
       window.location.href = '/'
     }
