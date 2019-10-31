@@ -47053,6 +47053,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jquery */ "../node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _validationFunctions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validationFunctions */ "./wwwroot/javascripts/routes/validationFunctions.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -47076,6 +47077,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -47113,27 +47115,21 @@ function (_Component) {
       });
     });
 
-    _this.validate = _this.validate.bind(_assertThisInitialized(_this)); //this.formValid = this.formValid.bind(this);
-
-    /*this.checkAddress = this.checkAddress.bind(this);
-    this.checkEmail = this.checkEmail.bind(this);
-    this.checkFirstName = this.checkFirstName.bind(this);
-    this.checkLastName = this. checkLastName.bind(this);
-    this.checkPhoneNumber = this.checkPhoneNumber.bind(this);*/
-
-    _this.handleChangeFisrtName = _this.handleChangeFisrtName.bind(_assertThisInitialized(_this));
-    _this.FirstNameValid = _this.FirstNameValid.bind(_assertThisInitialized(_this));
+    _this.validate = _this.validate.bind(_assertThisInitialized(_this));
+    _this.validateInput = _this.validateInput.bind(_assertThisInitialized(_this));
+    _this.handleInputChange = _this.handleInputChange.bind(_assertThisInitialized(_this));
+    _this.handleInputBlur = _this.handleInputBlur.bind(_assertThisInitialized(_this));
     _this.state = {
       firstName: '',
       lastName: '',
       phoneNumber: '',
       address: '',
       email: '',
-      isFirstNameValid: true,
-      isLastNameValid: true,
-      isPhoneNumberValid: true,
-      isAddressValid: true,
-      isEmailValid: true
+      firstNameError: '',
+      lastNameError: '',
+      phoneNumberError: '',
+      addressError: '',
+      emailError: ''
     };
     return _this;
   }
@@ -47141,156 +47137,138 @@ function (_Component) {
   _createClass(AddPersonPage, [{
     key: "validate",
     value: function validate() {
-      console.log(this.formValid());
+      this.validateInput();
 
-      if (!this.formValid()) {
-        document.getElementById('error-form').innerHTML = "Form isn't filled correctly";
-      } else {
-        this.addPerson();
-        window.location.href = '/';
-      }
-    }
-    /*checkPhoneNumber(number){
-        console.log(number);
-        if(!number.match(/^\d{10}$/)){
-            document.getElementById('error-phone').innerHTML = "Please put in a proper phone number, 10 digits";
-            this.setState({isPhoneNumberValid: false});
-            return false;
-        } else {
-            document.getElementById('error-phone').innerHTML = "";
-            this.setState({isPhoneNumberValid: true});
-            return true;
-        }
-    }
-     checkEmail(email){
-        console.log(email);
-        if(!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)){
-            document.getElementById('error-email').innerHTML = "Please put in a proper email";
-            this.setState({isEmailValid: false});
-            return false;
-        } else {
-            document.getElementById('error-email').innerHTML = "";
-            this.setState({isEmailValid: true});
-            return true;
-        }
-    }*/
-
-  }, {
-    key: "checkFirstName",
-    value: function checkFirstName(firstName) {
-      if (firstName === '') {
-        document.getElementById('error-firstName').innerHTML = "This field can't be empty";
-        this.setState({
-          isFirstNameValid: false
-        });
+      if (!this.state.firstName || !this.state.lastName || !this.state.phoneNumber || !this.state.address || !this.state.email) {
+        this.validateInput('firstName');
+        this.validateInput('lastName');
+        this.validateInput('phoneNumber');
+        this.validateInput('address');
+        this.validateInput('email');
         return false;
       } else {
-        document.getElementById('error-firstName').innerHTML = "";
-        this.setState({
-          isFirstNameValid: true
-        });
+        console.log('we hit the else', this.state);
+        this.addPerson();
+        window.location.href = '/';
         return true;
       }
     }
-    /*
-    checkLastName(lastName){
-        if(lastName===''){
-            document.getElementById('error-lastName').innerHTML = "This field can't be empty";
-            LastNameValid();
-            return false;
-        } else {
-            document.getElementById('error-lastName').innerHTML = "";
-            this.setState({isLastNameValid: true});
-            return true;
-        }
-    }
-     checkAddress(address){
-        if(address===''){
-            document.getElementById('error-address').innerHTML = "This field can't be empty";
-            this.setState({isAddressValid: false});
-            return false;
-        } else {
-            document.getElementById('error-address').innerHTML = "";
-            this.setState({isAddressValid: true});
-            return true;
-        }
-    }
-     formValid() {
-        let validFirstName = this.state.firstName;
-        let validLastName = this.state.lastName;
-        let validAddress = this.state.address;
-        let validEmail = this.state.email;
-        let validPhoneNumber = this.state.phoneNumber;
-        if(this.checkEmail(validEmail)==true 
-        && this.checkPhoneNumber(validPhoneNumber)==true 
-        && this.checkFirstName(validFirstName)==true
-        && this.checkLastName(validLastName)==true
-        && this.checkAddress(validAddress)==true) { 
-            this.setState({
-            isFirstNameValid: true,
-            isLastNameValid: true,
-            isPhoneNumberValid: true,
-            isAddressValid: true,
-            isEmailValid: true
-            })
-            return true;
-        } else {
-            return false;
-        }
-    }*/
-
   }, {
-    key: "handleChangeFisrtName",
-    value: function handleChangeFisrtName(event) {
-      this.setState({
-        firstName: event.target.value
-      });
-      this.checkFirstName();
-    }
-    /*this.setState({ firstName: event.target.value });
-    handleChangeLastName = event =>
-    this.setState({ lastName: event.target.value });
-    handleChangePhoneNumber = event =>
-    this.setState({ phoneNumber: event.target.value });
-    handleChangeAddress = event =>
-    this.setState({ address: event.target.value });
-    handleChangeEmail = event =>
-    this.setState({ email: event.target.value });*/
+    key: "validateInput",
+    value: function validateInput(name) {
+      if (name === 'firstName') {
+        this.setState({
+          firstNameError: Object(_validationFunctions__WEBPACK_IMPORTED_MODULE_2__["getFirstNameValidationError"])(this.state.firstName)
+        });
+      }
 
+      if (name === 'lastName') {
+        this.setState({
+          lastNameError: Object(_validationFunctions__WEBPACK_IMPORTED_MODULE_2__["getLastNameValidationError"])(this.state.lastName)
+        });
+      }
+
+      if (name === 'phoneNumber') {
+        this.setState({
+          phoneNumberError: Object(_validationFunctions__WEBPACK_IMPORTED_MODULE_2__["getPhoneNumberValidationError"])(this.state.phoneNumber)
+        });
+      }
+
+      if (name === 'address') {
+        this.setState({
+          addressError: Object(_validationFunctions__WEBPACK_IMPORTED_MODULE_2__["getAddressValidationError"])(this.state.address)
+        });
+      }
+
+      if (name === 'email') {
+        this.setState({
+          emailError: Object(_validationFunctions__WEBPACK_IMPORTED_MODULE_2__["getEmailValidationError"])(this.state.email)
+        });
+      }
+    }
+  }, {
+    key: "handleInputChange",
+    value: function handleInputChange(event) {
+      var _this2 = this;
+
+      var name = event.target.name;
+      var newValue = event.target.value;
+      this.setState(_defineProperty({}, name, newValue), function () {
+        _this2.validateInput(name);
+      });
+    }
+  }, {
+    key: "handleInputBlur",
+    value: function handleInputBlur(event) {
+      var name = event.target.name;
+      this.validateInput(name);
+    }
   }, {
     key: "backToList",
     value: function backToList() {
       window.location.href = "/";
     }
   }, {
-    key: "FirstNameValid",
-    value: function FirstNameValid() {
-      this.checkFirstName();
-    }
-    /*LastNameValid = () => this.setState({isLastNameValid: false});  
-    PhoneNumberValid = () => this.setState({isPhoneNumberValid: false});
-    AddressValid = () => this.setState({isAddressValid: false});
-    EmailValid = () => this.setState({isEmailValid: false});*/
-
-  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "wrapper"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Add a person"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "all fields are required"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-        id: "error-form"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "First name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Add a person"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "All fields are required"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "First name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "firstName",
         value: this.state.firstName,
-        onChange: this.handleChangeFisrtName,
-        onBlur: this.FirstNameValid,
+        onChange: this.handleInputChange,
+        onBlur: this.handleInputBlur,
         style: {
-          border: this.state.isFirstNameValid ? '1px solid black' : '1px solid red'
+          border: this.state.firstNameError ? '1px solid red' : '1px solid black'
         }
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.state.firstNameError && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         id: "error-firstName"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      }, this.state.firstNameError), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Last name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "lastName",
+        value: this.state.lastName,
+        onChange: this.handleInputChange,
+        onBlur: this.handleInputBlur,
+        style: {
+          border: this.state.lastNameError ? '1px solid red' : '1px solid black'
+        }
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.state.lastNameError && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "error-lastName"
+      }, this.state.lastNameError), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Phone number"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "phoneNumber",
+        value: this.state.phoneNumber,
+        onChange: this.handleInputChange,
+        onBlur: this.handleInputBlur,
+        style: {
+          border: this.state.phoneNumberError ? '1px solid red' : '1px solid black'
+        }
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.state.phoneNumberError && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "error-phone"
+      }, this.state.phoneNumberError), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Address"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "address",
+        value: this.state.address,
+        onChange: this.handleInputChange,
+        onBlur: this.handleInputBlur,
+        style: {
+          border: this.state.addressError ? '1px solid red' : '1px solid black'
+        }
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.state.addressError && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "error-address"
+      }, this.state.addressError), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "E-mail"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "email",
+        value: this.state.email,
+        onChange: this.handleInputChange,
+        onBlur: this.handleInputBlur,
+        style: {
+          border: this.state.emailError ? '1px solid red' : '1px solid black'
+        }
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.state.emailError && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "error-email"
+      }, this.state.emailError), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "btn",
         onClick: this.validate
       }, "Add"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -47303,18 +47281,19 @@ function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 /* harmony default export */ __webpack_exports__["default"] = (AddPersonPage);
-/*<label>Last name</label><br/>
-<input type="text" name="lastName" value={this.state.lastName} onChange={this.handleChangeLastName} onBlur={this.LastNameValid} style={{border: this.state.isLastNameValid ? '1px solid black' : '1px solid red'}}/><br/>
-<span id="error-lastName"></span><br/>
-<label>Phone number</label><br/>
-<input type="text" name="phoneNumber" value={this.state.phoneNumber} onChange={this.handleChangePhoneNumber} onBlur={this.PhoneNumberValid} style={{border: this.state.isPhoneNumberValid ? '1px solid black' : '1px solid red'}}/><br/>
-<span id="error-phone"></span><br/>
-<label>Address</label><br/>
-<input type="text" name="address" value={this.state.address} onChange={this.handleChangeAddress} onBlur={this.AddressValid} style={{border: this.state.isAddressValid ? '1px solid black' : '1px solid red'}}/><br/>
-<span id="error-address"></span><br/>
-<label>E-mail</label><br/>
-<input type="text" name="email" value={this.state.email} onChange={this.handleChangeEmail} onBlur={this.EmailValid} style={{border: this.state.isEmailValid ? '1px solid black' : '1px solid red'}}/><br/>
-<span id="error-email"></span><br/>*/
+/*<p style={{color: 'red'}}>{this.state.formError}</p> 
+!this.state.addressError &&
+           !this.state.emailError &&
+           !this.state.firstNameError &&
+           !this.state.lastNameError &&
+           !this.state.phoneNumberError &&
+           (this.state.firstName!=='' || 
+           this.state.lastName!==''||
+           this.state.phoneNumber!==''||
+           this.state.address!=='' ||
+           this.state.email!=='')*/
+//this.setState({formError: 'You cannot add an empty form'})
+//formError: ''
 
 /***/ }),
 
@@ -47330,11 +47309,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router */ "../node_modules/react-router/esm/react-router.js");
+/* harmony import */ var _validationFunctions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validationFunctions */ "./wwwroot/javascripts/routes/validationFunctions.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -47352,7 +47334,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
@@ -47368,42 +47349,13 @@ function (_Component) {
     _classCallCheck(this, EditPersonPage);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(EditPersonPage).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_this), "handleChangeFisrtName", function (event) {
-      return _this.setState({
-        firstName: event.target.value
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "handleChangeLastName", function (event) {
-      return _this.setState({
-        lastName: event.target.value
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "handleChangePhoneNumber", function (event) {
-      return _this.setState({
-        phoneNumber: event.target.value
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "handleChangeAddress", function (event) {
-      return _this.setState({
-        address: event.target.value
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "handleChangeEmail", function (event) {
-      return _this.setState({
-        email: event.target.value
-      });
-    });
-
     _this.saveChanges = _this.saveChanges.bind(_assertThisInitialized(_this));
     _this.validate = _this.validate.bind(_assertThisInitialized(_this));
-    _this.formValid = _this.formValid.bind(_assertThisInitialized(_this));
     _this.compareValues = _this.compareValues.bind(_assertThisInitialized(_this));
     _this.backToList = _this.backToList.bind(_assertThisInitialized(_this));
+    _this.handleInputChange = _this.handleInputChange.bind(_assertThisInitialized(_this));
+    _this.validateInput = _this.validateInput.bind(_assertThisInitialized(_this));
+    _this.handleInputBlur = _this.handleInputBlur.bind(_assertThisInitialized(_this));
     _this.state = {
       id: _this.props.match.params.id,
       firstName: '',
@@ -47411,6 +47363,11 @@ function (_Component) {
       phoneNumber: '',
       address: '',
       email: '',
+      firstNameError: '',
+      lastNameError: '',
+      phoneNumberError: '',
+      addressError: '',
+      emailError: '',
       originalState: {}
     };
     return _this;
@@ -47465,60 +47422,8 @@ function (_Component) {
   }, {
     key: "validate",
     value: function validate() {
-      console.log(this.formValid());
-
-      if (!this.formValid()) {
-        console.log('form isnt correct');
-      } else {
+      if (!this.state.addressError && !this.state.emailError && !this.state.firstNameError && !this.state.lastNameError && !this.state.phoneNumberError) {
         this.saveChanges();
-      }
-    }
-  }, {
-    key: "checkPhoneNumber",
-    value: function checkPhoneNumber(number) {
-      console.log(number);
-
-      if (!String(number).match(/^\d{10}$/)) {
-        console.log("Please put in a proper phone number, 10 digits");
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }, {
-    key: "checkEmail",
-    value: function checkEmail(email) {
-      console.log(email);
-
-      if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-        console.log("Please put in a proper email");
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }, {
-    key: "checkFields",
-    value: function checkFields(fields) {
-      if (fields === '') {
-        console.log("These fields can't be empty");
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }, {
-    key: "formValid",
-    value: function formValid() {
-      var validField = this.state.firstName && this.state.lastName && this.state.address;
-      var validEmail = this.state.email;
-      var validPhoneNumber = this.state.phoneNumber;
-
-      if (this.checkEmail(validEmail) == true && this.checkPhoneNumber(validPhoneNumber) == true && this.checkFields(validField)) {
-        return true;
-      } else {
-        console.log("form isn't valid");
-        return false;
       }
     }
   }, {
@@ -47546,31 +47451,116 @@ function (_Component) {
       window.location.href = "http://localhost:5000/single-person/".concat(this.props.match.params.id);
     }
   }, {
+    key: "handleInputChange",
+    value: function handleInputChange(event) {
+      var _this3 = this;
+
+      var name = event.target.name;
+      var newValue = event.target.value;
+      this.setState(_defineProperty({}, name, newValue), function () {
+        _this3.validateInput(name);
+      });
+    }
+  }, {
+    key: "handleInputBlur",
+    value: function handleInputBlur(event) {
+      var name = event.target.name;
+      this.validateInput(name);
+    }
+  }, {
+    key: "validateInput",
+    value: function validateInput(name) {
+      if (name === 'firstName') {
+        this.setState({
+          firstNameError: Object(_validationFunctions__WEBPACK_IMPORTED_MODULE_2__["getFirstNameValidationError"])(this.state.firstName)
+        });
+      }
+
+      if (name === 'lastName') {
+        this.setState({
+          lastNameError: Object(_validationFunctions__WEBPACK_IMPORTED_MODULE_2__["getLastNameValidationError"])(this.state.lastName)
+        });
+      }
+
+      if (name === 'phoneNumber') {
+        this.setState({
+          phoneNumberError: Object(_validationFunctions__WEBPACK_IMPORTED_MODULE_2__["getPhoneNumberValidationError"])(this.state.phoneNumber)
+        });
+      }
+
+      if (name === 'address') {
+        this.setState({
+          addressError: Object(_validationFunctions__WEBPACK_IMPORTED_MODULE_2__["getAddressValidationError"])(this.state.address)
+        });
+      }
+
+      if (name === 'email') {
+        this.setState({
+          emailError: Object(_validationFunctions__WEBPACK_IMPORTED_MODULE_2__["getEmailValidationError"])(this.state.email)
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       console.log('props are:', this.props);
       console.log("State in render: ", this.state);
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Edit a person"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Edit a person"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "First name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
+        name: "firstName",
         value: this.state.firstName,
-        onChange: this.handleChangeFisrtName
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleInputChange,
+        onBlur: this.handleInputBlur,
+        style: {
+          border: this.state.firstNameError ? '1px solid red' : '1px solid black'
+        }
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.state.firstNameError && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "error-firstName"
+      }, this.state.firstNameError), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Last name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
+        name: "lastName",
         value: this.state.lastName,
-        onChange: this.handleChangeLastName
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleInputChange,
+        onBlur: this.handleInputBlur,
+        style: {
+          border: this.state.lastNameError ? '1px solid red' : '1px solid black'
+        }
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.state.lastNameError && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "error-lastName"
+      }, this.state.lastNameError), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Phone number"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
+        name: "phoneNumber",
         value: this.state.phoneNumber,
-        onChange: this.handleChangePhoneNumber
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleInputChange,
+        onBlur: this.handleInputBlur,
+        style: {
+          border: this.state.phoneNumberError ? '1px solid red' : '1px solid black'
+        }
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.state.phoneNumberError && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "error-phone"
+      }, this.state.phoneNumberError), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Address"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
+        name: "address",
         value: this.state.address,
-        onChange: this.handleChangeAddress
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleInputChange,
+        onBlur: this.handleInputBlur,
+        style: {
+          border: this.state.addressError ? '1px solid red' : '1px solid black'
+        }
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.state.addressError && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "error-address"
+      }, this.state.addressError), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "E-mail"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
+        name: "email",
         value: this.state.email,
-        onChange: this.handleChangeEmail
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onChange: this.handleInputChange,
+        onBlur: this.handleInputBlur,
+        style: {
+          border: this.state.emailError ? '1px solid red' : '1px solid black'
+        }
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), this.state.emailError && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        id: "error-email"
+      }, this.state.emailError), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.validate
       }, "Save"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.backToList
@@ -47838,11 +47828,18 @@ function (_Component) {
           }
         }, "Delete")));
       });
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "mainTable"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "First name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Last name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Phone number"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Address"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "E-mail"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Actions"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, items)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.redirectToAddPerson
-      }, "Add new person"));
+
+      if (this.state.people.length > 0) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "mainTable"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "First name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Last name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Phone number"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Address"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "E-mail"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Actions"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, items)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          onClick: this.redirectToAddPerson
+        }, "Add new person"));
+      } else {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "The phonebook is empty, add the first person!"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          onClick: this.redirectToAddPerson
+        }, "Add new person"));
+      }
     }
   }]);
 
@@ -47872,6 +47869,58 @@ var UnknownPage = function UnknownPage() {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (UnknownPage);
+
+/***/ }),
+
+/***/ "./wwwroot/javascripts/routes/validationFunctions.js":
+/*!***********************************************************!*\
+  !*** ./wwwroot/javascripts/routes/validationFunctions.js ***!
+  \***********************************************************/
+/*! exports provided: getFirstNameValidationError, getLastNameValidationError, getPhoneNumberValidationError, getAddressValidationError, getEmailValidationError */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFirstNameValidationError", function() { return getFirstNameValidationError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLastNameValidationError", function() { return getLastNameValidationError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPhoneNumberValidationError", function() { return getPhoneNumberValidationError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAddressValidationError", function() { return getAddressValidationError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEmailValidationError", function() { return getEmailValidationError; });
+function getFirstNameValidationError(firstName) {
+  if (!firstName) {
+    return 'Name cannot be empty';
+  } else {
+    return '';
+  }
+}
+function getLastNameValidationError(lastName) {
+  if (!lastName) {
+    return 'Last name cannot be empty';
+  } else {
+    return '';
+  }
+}
+function getPhoneNumberValidationError(phoneNumber) {
+  if (!phoneNumber.match(/^\+?\(?\d{2,4}\)?\-?\d{6,9}$/) || !phoneNumber) {
+    return 'Please put in a proper phone number, 10 digits';
+  } else {
+    return '';
+  }
+}
+function getAddressValidationError(address) {
+  if (!address) {
+    return 'Address cannot be empty';
+  } else {
+    return '';
+  }
+}
+function getEmailValidationError(email) {
+  if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) || !email) {
+    return 'Please put in a proper email';
+  } else {
+    return '';
+  }
+}
 
 /***/ }),
 

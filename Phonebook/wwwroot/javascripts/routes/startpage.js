@@ -65,8 +65,8 @@ class StartPage extends Component{
   .catch(err => console.error('this is error from catch', err))
   }
 
-   render(){
-     const items = this.state.people.map((item, index) =>      
+   render(){     
+    const items = this.state.people.map((item, index) =>      
       <tr key={index} >        
         <td onClick={() => this.showSinglePerson(item.id)}>{item.firstName}</td>
         <td onClick={() => this.showSinglePerson(item.id)}>{item.lastName}</td> 
@@ -78,28 +78,35 @@ class StartPage extends Component{
           <button onClick={() => this.toDelete(item.id)}>Delete</button>         
         </td>        
       </tr>
-      )
-    return(
-      <div className="mainTable">
-        <table>
-          <thead>
-          <tr>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Phone number</th>
-            <th>Address</th>
-            <th>E-mail</th>
-            <th>Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-            {items}
-          </tbody>         
-        </table>
+    )
+    if(this.state.people.length > 0){
+      return(
+        <div className="mainTable">
+          <table>
+            <thead>
+            <tr>
+              <th>First name</th>
+              <th>Last name</th>
+              <th>Phone number</th>
+              <th>Address</th>
+              <th>E-mail</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+              {items}
+            </tbody>         
+          </table>
+          <button onClick={this.redirectToAddPerson}>Add new person</button>
+        </div>
+      );
+    } else {
+      return (<div>
+        <h3>The phonebook is empty, add the first person!</h3>
         <button onClick={this.redirectToAddPerson}>Add new person</button>
-      </div>
-    );
-  }
+        </div>)      
+    }
+  };
 };
    
 

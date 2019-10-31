@@ -1,15 +1,22 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router';
-
+import {getAddressValidationError, 
+  getEmailValidationError, 
+  getFirstNameValidationError, 
+  getLastNameValidationError, 
+  getPhoneNumberValidationError} from './validationFunctions'
 
 class EditPersonPage extends Component{
     constructor(props) {
       super(props);
       this.saveChanges = this.saveChanges.bind(this);
       this.validate = this.validate.bind(this);
-      this.formValid = this.formValid.bind(this);   
       this.compareValues = this.compareValues.bind(this);
       this.backToList = this.backToList.bind(this);
+      this.handleInputChange = this.handleInputChange.bind(this);
+      this.validateInput = this.validateInput.bind(this);
+      this.handleInputBlur = this.handleInputBlur.bind(this);
+
   
       this.state = {
         id: this.props.match.params.id,
@@ -18,6 +25,11 @@ class EditPersonPage extends Component{
         phoneNumber: '',
         address: '',
         email: '',
+        firstNameError: '',
+        lastNameError: '',
+        phoneNumberError: '',
+        addressError: '',
+        emailError: '',
         originalState:{}
       };
     }
@@ -36,17 +48,6 @@ class EditPersonPage extends Component{
       })
 
    }
-
-   handleChangeFisrtName = event =>
-    this.setState({ firstName: event.target.value });
-    handleChangeLastName = event =>
-    this.setState({ lastName: event.target.value });
-    handleChangePhoneNumber = event =>
-    this.setState({ phoneNumber: event.target.value });
-    handleChangeAddress = event =>
-    this.setState({ address: event.target.value });
-    handleChangeEmail = event =>
-    this.setState({ email: event.target.value });
 
     backToList(){
       console.log(this.compareValues())
@@ -77,54 +78,16 @@ class EditPersonPage extends Component{
     };
 
     validate() {
-      console.log(this.formValid())
-      if (!this.formValid()){
-        console.log('form isnt correct')
-      } else {
+      if(
+          !this.state.addressError &&
+          !this.state.emailError &&
+          !this.state.firstNameError &&
+          !this.state.lastNameError &&
+          !this.state.phoneNumberError
+      ){        
           this.saveChanges()
       }
-    };
-
-    checkPhoneNumber(number){
-        console.log(number);
-        if(!String(number).match(/^\d{10}$/)){
-            console.log("Please put in a proper phone number, 10 digits");
-            return false;
-        } else {
-            return true;
-        }
-    };
-
-    checkEmail(email){
-        console.log(email);
-        if(!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)){
-            console.log("Please put in a proper email");
-            return false;
-        } else {
-            return true;
-        }
-    };
-
-    checkFields(fields){
-        if(fields===''){
-            console.log("These fields can't be empty");
-            return false;
-        } else {
-            return true;
-        }
-    };
-
-    formValid() {
-        let validField = this.state.firstName && this.state.lastName && this.state.address;
-        let validEmail = this.state.email;
-        let validPhoneNumber = this.state.phoneNumber;
-        if(this.checkEmail(validEmail)==true && this.checkPhoneNumber(validPhoneNumber)==true && this.checkFields(validField)){
-            return true;
-        } else {
-            console.log("form isn't valid")
-            return false;
-        }
-    };
+  }
 
     saveChanges(){
       fetch(`http://localhost:5000/api/edit-person/${this.props.match.params.id}`, {
@@ -144,7 +107,45 @@ class EditPersonPage extends Component{
       .then(response => console.log("Success:", response)); 
       window.location.href = `http://localhost:5000/single-person/${this.props.match.params.id}`
       
-    }   
+    }
+    
+    handleInputChange(event){
+      const name = event.target.name;
+      const newValue = event.target.value;
+
+      this.setState({ 
+          [name]: newValue
+      }, () => {
+          this.validateInput(name);
+      });
+    }
+
+    handleInputBlur(event) {
+      const name = event.target.name;
+      this.validateInput(name);
+    }
+
+    validateInput(name) {
+      if (name === 'firstName') {
+          this.setState({ firstNameError: getFirstNameValidationError(this.state.firstName) });
+      }
+
+      if (name === 'lastName') {
+          this.setState({ lastNameError: getLastNameValidationError(this.state.lastName) });
+      }
+
+      if (name === 'phoneNumber') {
+          this.setState({ phoneNumberError: getPhoneNumberValidationError(this.state.phoneNumber) });
+      }
+
+      if (name === 'address') {
+          this.setState({ addressError: getAddressValidationError(this.state.address) });
+      }
+
+      if (name === 'email') {
+          this.setState({ emailError: getEmailValidationError(this.state.email) });
+      }
+  }
  
     
     render(){     
@@ -154,11 +155,56 @@ class EditPersonPage extends Component{
           <div>
             <div>
             <h3>Edit a person</h3>
-                <input type="text" value={this.state.firstName} onChange={this.handleChangeFisrtName}/><br/>
-                <input type="text" value={this.state.lastName} onChange={this.handleChangeLastName}/><br/>
-                <input type="text" value={this.state.phoneNumber} onChange={this.handleChangePhoneNumber}/><br/>
-                <input type="text" value={this.state.address} onChange={this.handleChangeAddress}/><br/>
-                <input type="text" value={this.state.email} onChange={this.handleChangeEmail}/><br/>
+                <label>First name</label><br/>
+                <input 
+                type="text" 
+                name="firstName" 
+                value={this.state.firstName} 
+                onChange={this.handleInputChange} 
+                onBlur={this.handleInputBlur}
+                style={{border: this.state.firstNameError ? '1px solid red' : '1px solid black'}}/><br/>
+                { this.state.firstNameError && <div><span id="error-firstName">{this.state.firstNameError}</span><br/></div> }
+
+                <label>Last name</label><br/>
+                <input 
+                type="text" 
+                name="lastName" 
+                value={this.state.lastName} 
+                onChange={this.handleInputChange} 
+                onBlur={this.handleInputBlur} 
+                style={{border: this.state.lastNameError ? '1px solid red' : '1px solid black'}}/><br/>
+                { this.state.lastNameError && <div><span id="error-lastName">{this.state.lastNameError}</span><br/></div>}
+
+                <label>Phone number</label><br/>
+                <input 
+                type="text" 
+                name="phoneNumber" 
+                value={this.state.phoneNumber} 
+                onChange={this.handleInputChange} 
+                onBlur={this.handleInputBlur} 
+                style={{border: this.state.phoneNumberError ? '1px solid red' : '1px solid black'}}/><br/>
+                { this.state.phoneNumberError && <div><span id="error-phone">{this.state.phoneNumberError}</span><br/></div>}
+
+                <label>Address</label><br/>
+                <input 
+                type="text" 
+                name="address" 
+                value={this.state.address} 
+                onChange={this.handleInputChange} 
+                onBlur={this.handleInputBlur}
+                style={{border: this.state.addressError ? '1px solid red' : '1px solid black'}}/><br/>
+                { this.state.addressError && <div><span id="error-address">{this.state.addressError}</span><br/></div>}
+
+                <label>E-mail</label><br/>
+                <input 
+                type="text" 
+                name="email" 
+                value={this.state.email} 
+                onChange={this.handleInputChange} 
+                onBlur={this.handleInputBlur} 
+                style={{border: this.state.emailError ? '1px solid red' : '1px solid black'}}/><br/>
+                { this.state.emailError && <div><span id="error-email">{this.state.emailError}</span><br/></div>}
+
             </div>
             <button onClick={this.validate}>Save</button>            
             <button onClick={this.backToList}>Back to the list</button>

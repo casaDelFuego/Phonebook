@@ -1,5 +1,10 @@
 import React, { Component} from 'react';
 import $ from "jquery";
+import {getAddressValidationError, 
+        getEmailValidationError, 
+        getFirstNameValidationError, 
+        getLastNameValidationError, 
+        getPhoneNumberValidationError} from './validationFunctions'
 
 const generateId = () => {
     return (Math.random() + 1).toString(36).substring(7);
@@ -9,14 +14,9 @@ class AddPersonPage extends Component  {
     constructor(props){
         super(props);
         this.validate = this.validate.bind(this);
-        //this.formValid = this.formValid.bind(this);
-        /*this.checkAddress = this.checkAddress.bind(this);
-        this.checkEmail = this.checkEmail.bind(this);
-        this.checkFirstName = this.checkFirstName.bind(this);
-        this.checkLastName = this. checkLastName.bind(this);
-        this.checkPhoneNumber = this.checkPhoneNumber.bind(this);*/
-        this.handleChangeFisrtName = this.handleChangeFisrtName.bind(this);
-        this.FirstNameValid = this.FirstNameValid.bind(this);
+        this.validateInput = this.validateInput.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleInputBlur = this.handleInputBlur.bind(this);
 
         this.state = {
             firstName: '',
@@ -24,11 +24,12 @@ class AddPersonPage extends Component  {
             phoneNumber: '',
             address: '',
             email: '',
-            isFirstNameValid: true,
-            isLastNameValid: true,
-            isPhoneNumberValid: true,
-            isAddressValid: true,
-            isEmailValid: true
+            firstNameError: '',
+            lastNameError: '',
+            phoneNumberError: '',
+            addressError: '',
+            emailError: ''
+           
         }
     }
     
@@ -54,138 +55,129 @@ class AddPersonPage extends Component  {
     };
 
     validate() {
-        console.log(this.formValid())
-        if (!this.formValid()){
-        document.getElementById('error-form').innerHTML = "Form isn't filled correctly";
+        this.validateInput();
+        if(!this.state.firstName ||
+           !this.state.lastName ||
+           !this.state.phoneNumber ||
+           !this.state.address ||
+           !this.state.email){
+            this.validateInput('firstName');
+            this.validateInput('lastName');
+            this.validateInput('phoneNumber');
+            this.validateInput('address');
+            this.validateInput('email');
+            return false;
         } else {
+            console.log('we hit the else', this.state)
             this.addPerson()
             window.location.href = '/'
-        }
-    }
-
-    /*checkPhoneNumber(number){
-        console.log(number);
-        if(!number.match(/^\d{10}$/)){
-            document.getElementById('error-phone').innerHTML = "Please put in a proper phone number, 10 digits";
-            this.setState({isPhoneNumberValid: false});
-            return false;
-        } else {
-            document.getElementById('error-phone').innerHTML = "";
-            this.setState({isPhoneNumberValid: true});
             return true;
         }
     }
+  
+   
 
-    checkEmail(email){
-        console.log(email);
-        if(!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)){
-            document.getElementById('error-email').innerHTML = "Please put in a proper email";
-            this.setState({isEmailValid: false});
-            return false;
-        } else {
-            document.getElementById('error-email').innerHTML = "";
-            this.setState({isEmailValid: true});
-            return true;
+    validateInput(name) {
+        if (name === 'firstName') {
+            this.setState({ firstNameError: getFirstNameValidationError(this.state.firstName) });
         }
-    }*/
 
-    checkFirstName(firstName){
-        if(firstName===''){
-            document.getElementById('error-firstName').innerHTML = "This field can't be empty";
-            this.setState({isFirstNameValid: false})
-            return false;
-        } else {
-            document.getElementById('error-firstName').innerHTML = "";
-            this.setState({isFirstNameValid: true})
-            return true;
+        if (name === 'lastName') {
+            this.setState({ lastNameError: getLastNameValidationError(this.state.lastName) });
         }
-    }
-    /*
-    checkLastName(lastName){
-        if(lastName===''){
-            document.getElementById('error-lastName').innerHTML = "This field can't be empty";
-            LastNameValid();
-            return false;
-        } else {
-            document.getElementById('error-lastName').innerHTML = "";
-            this.setState({isLastNameValid: true});
-            return true;
+
+        if (name === 'phoneNumber') {
+            this.setState({ phoneNumberError: getPhoneNumberValidationError(this.state.phoneNumber) });
+        }
+
+        if (name === 'address') {
+            this.setState({ addressError: getAddressValidationError(this.state.address) });
+        }
+
+        if (name === 'email') {
+            this.setState({ emailError: getEmailValidationError(this.state.email) });
         }
     }
 
-    checkAddress(address){
-        if(address===''){
-            document.getElementById('error-address').innerHTML = "This field can't be empty";
-            this.setState({isAddressValid: false});
-            return false;
-        } else {
-            document.getElementById('error-address').innerHTML = "";
-            this.setState({isAddressValid: true});
-            return true;
-        }
+    handleInputChange(event){
+        const name = event.target.name;
+        const newValue = event.target.value;
+
+        this.setState({ 
+            [name]: newValue
+        }, () => {
+            this.validateInput(name);
+        });
     }
 
-    formValid() {
-        let validFirstName = this.state.firstName;
-        let validLastName = this.state.lastName;
-        let validAddress = this.state.address;
-        let validEmail = this.state.email;
-        let validPhoneNumber = this.state.phoneNumber;
-        if(this.checkEmail(validEmail)==true 
-        && this.checkPhoneNumber(validPhoneNumber)==true 
-        && this.checkFirstName(validFirstName)==true
-        && this.checkLastName(validLastName)==true
-        && this.checkAddress(validAddress)==true) { 
-            this.setState({
-            isFirstNameValid: true,
-            isLastNameValid: true,
-            isPhoneNumberValid: true,
-            isAddressValid: true,
-            isEmailValid: true
-            })
-            return true;
-        } else {
-            return false;
-        }
-    }*/
-
-    handleChangeFisrtName(event){
-        this.setState({ firstName: event.target.value });
-        this.checkFirstName();
+    handleInputBlur(event) {
+        const name = event.target.name;
+        this.validateInput(name);
     }
-    /*this.setState({ firstName: event.target.value });
-    handleChangeLastName = event =>
-    this.setState({ lastName: event.target.value });
-    handleChangePhoneNumber = event =>
-    this.setState({ phoneNumber: event.target.value });
-    handleChangeAddress = event =>
-    this.setState({ address: event.target.value });
-    handleChangeEmail = event =>
-    this.setState({ email: event.target.value });*/
 
     backToList(){
         window.location.href = "/"
     }
 
-    FirstNameValid (){
-        this.checkFirstName();
-    } 
-    /*LastNameValid = () => this.setState({isLastNameValid: false});  
-    PhoneNumberValid = () => this.setState({isPhoneNumberValid: false});
-    AddressValid = () => this.setState({isAddressValid: false});
-    EmailValid = () => this.setState({isEmailValid: false});*/
+
 
     render (){
 
         return (
             <div className="wrapper">
                 <h3>Add a person</h3>
-                <p>all fields are required</p><br/>
-                <span id="error-form"></span><br/><br/>
-                <label>First name</label><br/>
-                <input type="text" name="firstName" value={this.state.firstName} onChange={this.handleChangeFisrtName} onBlur={this.FirstNameValid} style={{border: this.state.isFirstNameValid ? '1px solid black' : '1px solid red'}}/><br/>
-                <span id="error-firstName"></span><br/>
+                <p>All fields are required</p><br/>
                 
+                <label>First name</label><br/>
+                <input 
+                type="text" 
+                name="firstName" 
+                value={this.state.firstName} 
+                onChange={this.handleInputChange} 
+                onBlur={this.handleInputBlur}
+                style={{border: this.state.firstNameError ? '1px solid red' : '1px solid black'}}/><br/>
+                { this.state.firstNameError && <div><span id="error-firstName">{this.state.firstNameError}</span><br/></div> }
+                
+                <label>Last name</label><br/>
+                <input 
+                type="text" 
+                name="lastName" 
+                value={this.state.lastName} 
+                onChange={this.handleInputChange} 
+                onBlur={this.handleInputBlur} 
+                style={{border: this.state.lastNameError ? '1px solid red' : '1px solid black'}}/><br/>
+                { this.state.lastNameError && <div><span id="error-lastName">{this.state.lastNameError}</span><br/></div>}
+
+                <label>Phone number</label><br/>
+                <input 
+                type="text" 
+                name="phoneNumber" 
+                value={this.state.phoneNumber} 
+                onChange={this.handleInputChange} 
+                onBlur={this.handleInputBlur} 
+                style={{border: this.state.phoneNumberError ? '1px solid red' : '1px solid black'}}/><br/>
+                { this.state.phoneNumberError && <div><span id="error-phone">{this.state.phoneNumberError}</span><br/></div>}
+
+                <label>Address</label><br/>
+                <input 
+                type="text" 
+                name="address" 
+                value={this.state.address} 
+                onChange={this.handleInputChange} 
+                onBlur={this.handleInputBlur}
+                style={{border: this.state.addressError ? '1px solid red' : '1px solid black'}}/><br/>
+                { this.state.addressError && <div><span id="error-address">{this.state.addressError}</span><br/></div>}
+
+                <label>E-mail</label><br/>
+                <input 
+                type="text" 
+                name="email" 
+                value={this.state.email} 
+                onChange={this.handleInputChange} 
+                onBlur={this.handleInputBlur} 
+                style={{border: this.state.emailError ? '1px solid red' : '1px solid black'}}/><br/>
+                { this.state.emailError && <div><span id="error-email">{this.state.emailError}</span><br/></div>}
+
                 <button className="btn" onClick={this.validate}>Add</button>
                 <button onClick={this.backToList}>Back to the list</button>
             </div>
@@ -198,15 +190,16 @@ class AddPersonPage extends Component  {
   
   export default AddPersonPage;
 
-  /*<label>Last name</label><br/>
-  <input type="text" name="lastName" value={this.state.lastName} onChange={this.handleChangeLastName} onBlur={this.LastNameValid} style={{border: this.state.isLastNameValid ? '1px solid black' : '1px solid red'}}/><br/>
-  <span id="error-lastName"></span><br/>
-  <label>Phone number</label><br/>
-  <input type="text" name="phoneNumber" value={this.state.phoneNumber} onChange={this.handleChangePhoneNumber} onBlur={this.PhoneNumberValid} style={{border: this.state.isPhoneNumberValid ? '1px solid black' : '1px solid red'}}/><br/>
-  <span id="error-phone"></span><br/>
-  <label>Address</label><br/>
-  <input type="text" name="address" value={this.state.address} onChange={this.handleChangeAddress} onBlur={this.AddressValid} style={{border: this.state.isAddressValid ? '1px solid black' : '1px solid red'}}/><br/>
-  <span id="error-address"></span><br/>
-  <label>E-mail</label><br/>
-  <input type="text" name="email" value={this.state.email} onChange={this.handleChangeEmail} onBlur={this.EmailValid} style={{border: this.state.isEmailValid ? '1px solid black' : '1px solid red'}}/><br/>
-  <span id="error-email"></span><br/>*/
+ /*<p style={{color: 'red'}}>{this.state.formError}</p> 
+ !this.state.addressError &&
+            !this.state.emailError &&
+            !this.state.firstNameError &&
+            !this.state.lastNameError &&
+            !this.state.phoneNumberError &&
+            (this.state.firstName!=='' || 
+            this.state.lastName!==''||
+            this.state.phoneNumber!==''||
+            this.state.address!=='' ||
+            this.state.email!=='')*/
+ //this.setState({formError: 'You cannot add an empty form'})
+  //formError: ''

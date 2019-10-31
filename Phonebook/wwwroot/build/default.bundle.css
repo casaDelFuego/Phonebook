@@ -13,7 +13,8 @@ th {
   background-color: #bebebe; }
 
 input {
-  width: 50%; }
+  width: 50%;
+  outline: none; }
 
 /*input:invalid {
     border: 1px solid red;
